@@ -2,22 +2,22 @@ package jtoir.uz.lib.data.repository
 
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
 import jtoir.uz.DatabaseFactory.dbQuery
 import jtoir.uz.lib.data.model.getRoleByString
 import jtoir.uz.lib.data.model.getStringByRole
 import jtoir.uz.lib.data.model.tables.UserModel
 import jtoir.uz.lib.data.model.tables.UserTable
 import jtoir.uz.lib.domain.repository.UserRepository
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.selectAll
 
 
 class UserRepositoryImpl : UserRepository {
     override suspend fun getUserByEmail(email: String): UserModel? {
         return dbQuery {
             UserTable
-                .select(UserTable.email.eq(email) )
-                .map { rowToUser(row = it) }
+                .selectAll()
+                .where { UserTable.email eq email }
+                .map { rowToUser(it) }
                 .singleOrNull()
         }
     }
