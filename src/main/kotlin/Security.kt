@@ -22,10 +22,7 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.*
 import org.slf4j.event.*
 
-fun Application.configureSecurity() {
-    val jwtService = JwtService()
-    val repository = UserRepositoryImpl()
-    val userUseCase = UserUseCase(repository, jwtService)
+fun Application.configureSecurity(userUseCase: UserUseCase) {
 
 //    runBlocking {
 //        userUseCase.createUser(
@@ -44,7 +41,7 @@ fun Application.configureSecurity() {
 
     authentication {
         jwt("jwt") {
-            verifier(jwtService.getVerifier())
+            verifier(userUseCase.getJwtVerifier())
             realm ="Service server"
             validate { credential ->
                 val payload = credential.payload

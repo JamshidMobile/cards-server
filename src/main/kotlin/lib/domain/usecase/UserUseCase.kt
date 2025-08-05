@@ -1,5 +1,6 @@
 package jtoir.uz.lib.domain.usecase
 
+import com.auth0.jwt.JWTVerifier
 import jtoir.uz.lib.authentification.JwtService
 import jtoir.uz.lib.data.model.tables.UserModel
 import jtoir.uz.lib.domain.repository.UserRepository
@@ -14,4 +15,6 @@ class UserUseCase(
     suspend fun findUserByEmail(email: String) = userRepository.getUserByEmail(email)
 
     fun generateToken(userModel: UserModel) = jwtService.generateToken(userModel)
+
+    fun getJwtVerifier(): JWTVerifier = jwtService.getVerifier()
 }
