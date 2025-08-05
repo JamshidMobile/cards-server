@@ -1,9 +1,12 @@
 package jtoir.uz.lib.routes
 
 import io.ktor.http.HttpStatusCode
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.principal
 import io.ktor.server.request.receiveNullable
 import io.ktor.server.response.respond
 import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import jtoir.uz.lib.authentification.hash
 import jtoir.uz.lib.data.model.getRoleByString
@@ -63,6 +66,21 @@ fun Route.UserRoute(userUseCase: UserUseCase) {
         }
         catch (e: Exception) {
             call.respond(HttpStatusCode.Conflict, message = BaseResponse(false, e.message ?: Constants.Error.GENERAL))
+        }
+    }
+
+    authenticate("jwt") {
+        get("api/v1/get-user-info") {
+            try {
+                val user = call.principal<UserModel>()
+                if(user != null){
+                    call.respond(status = HttpStatusCode.OK, message = user)
+                }else{
+                    call.respond(status = HttpStatusCode.BadRequest, message = BaseResponse(false, Constants.Error.USER_NOT_FOUND))
+                }
+            }catch (e: Exception) {
+                call.respond(HttpStatusCode.Conflict, message = BaseResponse(false, e.message ?: Constants.Error.GENERAL))
+            }
         }
     }
 }

@@ -2,7 +2,9 @@ package jtoir.uz.lib.data.model.tables
 
 import io.ktor.server.auth.Principal
 import jtoir.uz.lib.data.model.RoleModel
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class UserModel(
     val id: Int,
     val email: String,
