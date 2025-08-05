@@ -18,6 +18,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import jtoir.uz.lib.data.model.tables.CardTable
 import jtoir.uz.lib.data.model.tables.UserTable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.event.*
@@ -54,5 +56,13 @@ object DatabaseFactory {
         config.transactionIsolation = "TRANSACTION_REPEATABLE_READ"
         config.validate()
         return HikariDataSource(config)
+    }
+
+    suspend fun <T> dbQuery(block: ()->T): T {
+        return withContext(Dispatchers.IO) {
+            transaction {
+                block()
+            }
+        }
     }
 }

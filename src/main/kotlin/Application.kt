@@ -10,8 +10,8 @@ fun main(args: Array<String>) {
 fun Application.module() {
 
     initializationDatabase()
-//    configureSecurity()
-//    configureMonitoring()
-//    configureSerialization()
+    configureMonitoring()
+    configureSerialization()
+    configureSecurity()
 //    configureRouting()
 }
