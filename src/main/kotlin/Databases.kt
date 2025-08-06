@@ -23,13 +23,18 @@ import kotlinx.coroutines.withContext
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.event.*
+import io.github.cdimascio.dotenv.dotenv
+val dotenv = dotenv {
+    ignoreIfMalformed = true
+    ignoreIfMissing = true
+}
 
 object DatabaseFactory {
 
     private val appConfig = HoconApplicationConfig(ConfigFactory.load())
-    private val dbUrl = System.getenv("DB_POSTGRES_URL") ?: error("DB_POSTGRES_URL is not set")
-    private val dbUser = System.getenv("DB_POSTGRES_USER") ?: error("DB_POSTGRES_USER is not set")
-    private val dbPassword = System.getenv("DB_POSTGRES_PASSWORD") ?: error("DB_POSTGRES_PASSWORD is not set")
+    private val dbUrl = dotenv["DB_POSTGRES_URL"] ?: System.getenv("DB_POSTGRES_URL") ?: error("DB_POSTGRES_URL is not set")
+    private val dbUser =dotenv["DB_POSTGRES_USER"] ?: System.getenv("DB_POSTGRES_USER") ?: error("DB_POSTGRES_USER is not set")
+    private val dbPassword =dotenv["DB_POSTGRES_PASSWORD"] ?: System.getenv("DB_POSTGRES_PASSWORD") ?: error("DB_POSTGRES_PASSWORD is not set")
 
 
 

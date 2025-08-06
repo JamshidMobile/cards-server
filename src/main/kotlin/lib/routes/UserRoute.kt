@@ -23,7 +23,7 @@ fun Route.UserRoute(userUseCase: UserUseCase) {
 
     val hashFunction = { s: String -> hash(s) }
 
-    post("api/v1/signup") {
+     post("api/v1/signup") {
         val registerRequest = call.receiveNullable<RegisterRequest>() ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest, message = BaseResponse(false, Constants.Error.GENERAL))
             return@post

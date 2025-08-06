@@ -57,9 +57,12 @@ fun Route.CardsRoute(cardUseCase: CardUseCase){
                 return@post
             }
             try {
+                if (cardRequest.id == null){
+                    call.respond(HttpStatusCode.BadRequest, message = BaseResponse(false, Constants.Error.MISSING_FIELDS))
+                }
                 val ownerId = call.principal<UserModel>()!!.id
                 val card = CardModel(
-                    id = cardRequest.id,
+                    id = cardRequest.id ?: 0,
                     ownerId = ownerId,
                     cardTitle = cardRequest.cardTitle,
                     cardDescription = cardRequest.cardDescription,
@@ -74,13 +77,13 @@ fun Route.CardsRoute(cardUseCase: CardUseCase){
         }
 
         delete("api/v1/delete-card") {
-            val cardRequest = call.receiveNullable<AddCardRequest>() ?: kotlin.run {
+            val cardRequest = call.request.queryParameters[Constants.Value.ID]?.toInt() ?: kotlin.run {
                 call.respond(HttpStatusCode.BadRequest, message = BaseResponse(false, Constants.Error.MISSING_FIELDS))
                 return@delete
             }
             try {
                 val ownerId = call.principal<UserModel>()!!.id
-                cardUseCase.deleteCard(cardId = cardRequest.id, ownerId)
+                cardUseCase.deleteCard(cardId = cardRequest, ownerId)
                 call.respond(HttpStatusCode.OK, message = BaseResponse(success = true, message = Constants.Success.CARD_DELETED_SUCCESSFULLY))
             }catch (e: Exception){
                 call.respond(HttpStatusCode.Conflict, message = BaseResponse(false, e.message ?: Constants.Error.GENERAL))

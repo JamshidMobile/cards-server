@@ -20,4 +20,8 @@ class Constants {
         const val CARD_CHANGED_SUCCESSFULLY = "Card changed successfully!"
         const val CARD_DELETED_SUCCESSFULLY = "Card deleted successfully!"
     }
+
+    object Value{
+        const val ID= "id"
+    }
 }

@@ -14,4 +14,4 @@ data class UserModel(
     val lastName: String,
     val isActive: Boolean = false,
     val role: RoleModel,
-): Principal
+)

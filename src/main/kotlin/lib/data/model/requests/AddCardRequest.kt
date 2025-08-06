@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AddCardRequest(
-    val id: Int,
+    val id: Int?=null,
     val cardTitle:String,
     val cardDescription:String,
     val cardDate:String,

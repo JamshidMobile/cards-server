@@ -5,6 +5,8 @@ val logback_version: String by project
 val hikari_version: String by project
 val postgresql_version: String by project
 val commons_codec_version: String by project
+val ktor_version: String by project
+
 
 plugins {
     kotlin("jvm") version "2.1.10"
@@ -44,4 +46,16 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-java-time:${exposed_version}")
     implementation("org.postgresql:postgresql:${postgresql_version}")
     implementation("com.zaxxer:HikariCP:${hikari_version}")
+
+    implementation("io.ktor:ktor-server-swagger:${ktor_version}")
+    implementation("io.ktor:ktor-server-resources:${ktor_version}")
+    implementation("io.github.cdimascio:dotenv-kotlin:6.4.1")
+    implementation("io.ktor:ktor-server-openapi")
+    implementation("io.ktor:ktor-server-partial-content")
+    implementation("com.github.papsign:Ktor-OpenAPI-Generator:0.3-beta.3")
+
+
+
+
+
 }
