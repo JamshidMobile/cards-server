@@ -1,11 +1,268 @@
 openapi: 3.0.1
 info:
   title: Cards API
-  version: 1.0.0
+  version: "1.0"
+  description: API для работы с карточками
+
+#servers:
+#  - url: 192.168.49.113:8080
+
 paths:
-  /hello:
+  /api/v1/get-all-cards:
     get:
-      summary: Get All Cards
+      summary: Получить все карточки
+      tags:
+        - Cards
       responses:
         '200':
-          description: OK
+          description: Список карточек
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CardModel'
+      security:
+        - bearerAuth: [ ]
+
+  /api/v1/create-card:
+    post:
+      summary: Создать новую карточку
+      tags:
+        - Cards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCardRequest'
+      responses:
+        '200':
+          description: Успешное создание
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+      security:
+        - bearerAuth: [ ]
+  /api/v1/signup:
+    post:
+      summary: Регистрация нового пользователя
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Успешная регистрация
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Неверные данные
+        '409':
+          description: Конфликт (например, пользователь уже существует)
+
+  /api/v1/login:
+    post:
+      summary: Авторизация пользователя
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Неверный логин или пароль
+        '409':
+          description: Конфликт
+  /api/v1/update-card:
+    post:
+      summary: Обновить карточку
+      tags:
+        - Cards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddCardRequest'
+      responses:
+        '200':
+          description: Карточка успешно обновлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Отсутствуют обязательные поля
+        '409':
+          description: Конфликт при обновлении
+      security:
+        - bearerAuth: []
+  /api/v1/delete-card:
+    delete:
+      summary: Удалить карточку по ID
+      tags:
+        - Cards
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: integer
+          description: ID карточки для удаления
+      responses:
+        '200':
+          description: Карточка успешно удалена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseResponse'
+        '400':
+          description: Не передан ID
+        '409':
+          description: Конфликт при удалении
+      security:
+        - bearerAuth: []
+
+  /api/v1/get-user-info:
+    get:
+      summary: Получить информацию о текущем пользователе
+      tags:
+        - Auth
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Данные пользователя
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserModel'
+        '400':
+          description: Пользователь не найден
+        '401':
+          description: Неавторизован
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+     type: http
+     scheme: bearer
+     bearerFormat: JWT
+  schemas:
+    AddCardRequest:
+      type: object
+      required:
+        - cardTitle
+        - cardDescription
+        - cardDate
+        - isVerified
+      properties:
+        id:
+          type: integer
+          nullable: true
+        cardTitle:
+          type: string
+        cardDescription:
+          type: string
+        cardDate:
+          type: string
+        isVerified:
+          type: boolean
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - login
+        - password
+        - firstname
+        - lastname
+        - role
+      properties:
+        email:
+          type: string
+        login:
+          type: string
+        password:
+          type: string
+        firstname:
+          type: string
+        lastname:
+          type: string
+        role:
+          type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    UserModel:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        login:
+          type: string
+        password:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+
+    BaseResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+
+    CardModel:
+      type: object
+      properties:
+        id:
+          type: integer
+        ownerId:
+          type: integer
+        cardTitle:
+          type: string
+        cardDescription:
+          type: string
+        cardDate:
+          type: string
+        isVerified:
+          type: boolean
+
+
+
+

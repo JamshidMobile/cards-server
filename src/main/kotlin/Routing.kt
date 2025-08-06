@@ -11,7 +11,6 @@ import jtoir.uz.lib.routes.UserRoute
 
 fun Application.configureRouting(userUseCase: UserUseCase, cardUseCase: CardUseCase) {
    routing {
-       openAPI("openapi")
        swaggerUI(path = "swagger-ui", swaggerFile = "openapi/documentation.yaml")
        UserRoute(userUseCase)
        CardsRoute(cardUseCase)
