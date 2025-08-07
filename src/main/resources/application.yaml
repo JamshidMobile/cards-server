@@ -3,7 +3,11 @@ ktor:
     modules:
       - jtoir.uz.ApplicationKt.module
   deployment:
-    port: 8080
+    port: 3000
+  database :
+    url: "jdbc:postgresql://localhost:5433/card_db"
+    user: "postgres"
+    password: "1598753"
 jwt:
   domain: "https://jwt-provider-domain/"
   audience: "jwt-audience"
