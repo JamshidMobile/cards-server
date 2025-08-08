@@ -8,6 +8,68 @@ info:
 #  - url: 192.168.49.113:8080
 
 paths:
+  /api/v1/get-all-cards-paginated:
+    get:
+      summary: Получить список карточек с пагинацией
+      tags:
+        - Cards
+      description: Возвращает список карточек с учетом параметров страницы и лимита
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+          description: Номер страницы (начиная с 1)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+          description: Количество элементов на странице
+      responses:
+        '200':
+          description: Успешный ответ со списком карточек
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 13
+                        ownerId:
+                          type: integer
+                          example: 12
+                        cardTitle:
+                          type: string
+                          example: cardTitle 17
+                        cardDescription:
+                          type: string
+                          example: cardDescription 17
+                        cardDate:
+                          type: string
+                          format: date
+                          example: 2025-08-08
+                        isVerified:
+                          type: boolean
+                          example: false
+                  page:
+                    type: integer
+                    example: 2
+                  limit:
+                    type: integer
+                    example: 10
+                  total:
+                    type: integer
+                    example: 14
   /api/v1/get-all-cards:
     get:
       summary: Получить все карточки

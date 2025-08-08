@@ -1,6 +1,7 @@
 package jtoir.uz.lib.domain.usecase
 
 import jtoir.uz.lib.data.model.CardModel
+import jtoir.uz.lib.data.model.response.PaginatedCardResponce
 import jtoir.uz.lib.domain.repository.CardRepository
 
 class CardUseCase(
@@ -20,6 +21,18 @@ class CardUseCase(
 
     suspend fun deleteCard(cardId:Int,ownerId:Int){
         cardRepository.deleteCard(cardId = cardId, ownerId = ownerId)
+    }
+
+    suspend fun getPaginatedCards(page: Int, limit: Int): PaginatedCardResponce {
+        val data = cardRepository.getPaginated(page, limit)
+        val total = cardRepository.count()
+
+        return PaginatedCardResponce(
+            data = data,
+            page = page,
+            limit = limit,
+            total = total
+        )
     }
 
 }

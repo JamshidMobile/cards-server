@@ -10,9 +10,32 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 class CardRepositoryImpl: CardRepository {
+    override suspend fun getPaginated(
+        page: Int,
+        limit: Int
+    ): List<CardModel> = transaction {
+        CardTable
+            .selectAll()
+            .limit(limit).offset(((page - 1) * limit).toLong()).map {
+                CardModel(
+                    id = it[CardTable.id],
+                    ownerId = it[CardTable.owner],
+                    cardTitle = it[CardTable.cardTitle],
+                    cardDescription = it[CardTable.cardDescription],
+                    cardDate = it[CardTable.cardCreatedDate],
+                    isVerified = it[CardTable.isVerified],
+                )
+            }
+    }
+
+    override suspend fun count(): Long = transaction {
+        CardTable.selectAll().count()
+    }
+
     override suspend fun addCard(card: CardModel) {
         dbQuery {
             CardTable.insert { table ->

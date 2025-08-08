@@ -12,4 +12,8 @@ interface CardRepository {
 
     suspend fun deleteCard(cardId : Int, ownerId: Int)
 
+    suspend fun getPaginated(page: Int, limit: Int): List<CardModel>
+
+    suspend fun count(): Long
+
 }

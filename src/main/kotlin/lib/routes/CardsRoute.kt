@@ -21,6 +21,18 @@ fun Route.CardsRoute(cardUseCase: CardUseCase){
 
     authenticate("jwt"){
 
+        get("api/v1/get-all-cards-paginated") {
+            try {
+                val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
+                val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 10
+                val result = cardUseCase.getPaginatedCards(page, limit)
+                call.respond(result)
+            }catch (e: Exception){
+                call.respond(HttpStatusCode.Conflict, message = BaseResponse(false, e.message ?: Constants.Error.GENERAL))
+            }
+        }
+
+
         get ("api/v1/get-all-cards") {
             try {
                 val cards = cardUseCase.getAllCards()
