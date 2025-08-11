@@ -55,6 +55,9 @@ dependencies {
     implementation("io.ktor:ktor-server-openapi")
     implementation("io.ktor:ktor-server-partial-content")
     implementation("com.github.papsign:Ktor-OpenAPI-Generator:0.3-beta.3")
+
+    implementation("io.ktor:ktor-client-cio")
+    implementation("io.ktor:ktor-client-content-negotiation")
 }
 tasks {
     shadowJar {

@@ -5,6 +5,7 @@ import io.ktor.server.auth.authenticate
 import io.ktor.server.auth.principal
 import io.ktor.server.request.receiveNullable
 import io.ktor.server.response.respond
+import io.ktor.server.response.respondText
 import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
@@ -22,6 +23,10 @@ import java.util.Locale.getDefault
 fun Route.UserRoute(userUseCase: UserUseCase) {
 
     val hashFunction = { s: String -> hash(s) }
+
+    get("/users") {
+        call.respondText("Тут будет список пользователей")
+    }
 
      post("api/v1/signup") {
         val registerRequest = call.receiveNullable<RegisterRequest>() ?: kotlin.run {

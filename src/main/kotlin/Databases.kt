@@ -24,6 +24,8 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.slf4j.event.*
 import io.github.cdimascio.dotenv.dotenv
+import jtoir.uz.lib.data.model.tables.UsersTable
+
 val dotenv = dotenv {
     ignoreIfMalformed = true
     ignoreIfMissing = true
@@ -42,7 +44,7 @@ object DatabaseFactory {
         Database.connect(getHikariDataSource())
 
         transaction {
-            SchemaUtils.create(UserTable, CardTable)
+            SchemaUtils.create(UserTable, CardTable, UsersTable)
         }
     }
 

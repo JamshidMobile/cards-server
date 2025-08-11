@@ -3,12 +3,15 @@ package jtoir.uz.lib.data.repository
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.insert
 import jtoir.uz.DatabaseFactory.dbQuery
+import jtoir.uz.lib.data.model.User
 import jtoir.uz.lib.data.model.getRoleByString
 import jtoir.uz.lib.data.model.getStringByRole
 import jtoir.uz.lib.data.model.tables.UserModel
 import jtoir.uz.lib.data.model.tables.UserTable
+import jtoir.uz.lib.data.model.tables.UsersTable
 import jtoir.uz.lib.domain.repository.UserRepository
 import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.transactions.transaction
 
 
 class UserRepositoryImpl : UserRepository {
@@ -51,5 +54,18 @@ class UserRepositoryImpl : UserRepository {
             firstName = row[UserTable.firstName],
             role = row[UserTable.role].getRoleByString()
         )
+    }
+
+    override fun save(user: User) {
+        transaction {
+            UsersTable.insert {
+                it[uuid] = user.uuid
+                it[firstName] = user.firstName
+                it[lastName] = user.lastName
+                it[email] = user.email
+                it[phone] = user.phone
+                it[pictureUrl] = user.pictureUrl
+            }
+        }
     }
 }
